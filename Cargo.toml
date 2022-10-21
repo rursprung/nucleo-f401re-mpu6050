@@ -1,0 +1,16 @@
+[package]
+name = "nucleo-f401re-servo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+embedded-hal = "0.2"
+nb = "1"
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+# Panic behaviour, see https://crates.io/keywords/panic-impl for alternatives
+panic-halt = "0.2"
+
+[dependencies.stm32f4xx-hal]
+version = "0.13.2"
+features = ["stm32f401"]
