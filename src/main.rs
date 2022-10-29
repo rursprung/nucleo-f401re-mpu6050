@@ -1,8 +1,13 @@
 //! Demonstrate the usage of the `MPU6050` crate, based on their README and a previous blink example.
-#![deny(unsafe_code)]
 #![allow(clippy::empty_loop)]
 #![no_main]
 #![no_std]
+#![feature(alloc_error_handler)]
+
+extern crate alloc;
+
+use alloc_cortex_m::CortexMHeap;
+use core::alloc::Layout;
 
 use core::fmt::Write;
 
@@ -18,8 +23,26 @@ use stm32f4xx_hal::{
 
 use mpu6050::*;
 
+#[global_allocator]
+static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
+
+#[alloc_error_handler]
+fn oom(_: Layout) -> ! {
+    loop {}
+}
+
+fn init_allocator() {
+    // Initialize the allocator BEFORE you use it
+    use core::mem::MaybeUninit;
+    const HEAP_SIZE: usize = 1024;
+    static mut HEAP: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
+    unsafe { ALLOCATOR.init(HEAP.as_ptr() as usize, HEAP_SIZE) }
+}
+
 #[entry]
 fn main() -> ! {
+    init_allocator();
+
     if let (Some(dp), Some(cp)) = (
         pac::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
