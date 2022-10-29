@@ -9,8 +9,6 @@ extern crate alloc;
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout;
 
-use alloc::format;
-
 use defmt_rtt as _;
 
 use panic_halt as _; // Halt on panic
@@ -74,19 +72,19 @@ fn main() -> ! {
         loop {
             // get roll and pitch estimate
             let acc = mpu.get_acc_angles().unwrap();
-            defmt::info!("{}", format!("r/p: {:?}", acc).as_str());
+            defmt::info!("r/p: {}", defmt::Debug2Format(&acc));
 
             // get temp
             let temp = mpu.get_temp().unwrap();
-            defmt::info!("{}", format!("temp: {:?}°C", temp).as_str());
+            defmt::info!("temp: {}°C", defmt::Debug2Format(&temp));
 
             // get gyro data, scaled with sensitivity
             let gyro = mpu.get_gyro().unwrap();
-            defmt::info!("{}", format!("gyro: {:?}", gyro).as_str());
+            defmt::info!("gyro: {}", defmt::Debug2Format(&gyro));
 
             // get accelerometer data, scaled with sensitivity
             let acc = mpu.get_acc().unwrap();
-            defmt::info!("{}", format!("acc: {:?}", acc).as_str());
+            defmt::info!("acc: {}", defmt::Debug2Format(&acc));
 
             delay.delay_ms(1000_u32);
         }
