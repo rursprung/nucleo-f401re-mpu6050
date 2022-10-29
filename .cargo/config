@@ -2,6 +2,7 @@
 runner = 'probe-run --chip STM32F401'
 rustflags = [
     "-C", "link-arg=-Tlink.x",
+    "-C", "linker=flip-link",
 ]
 
 [build]
