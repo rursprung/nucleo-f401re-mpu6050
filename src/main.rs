@@ -9,7 +9,9 @@ extern crate alloc;
 use alloc_cortex_m::CortexMHeap;
 use core::alloc::Layout;
 
-use core::fmt::Write;
+use alloc::format;
+
+use defmt_rtt as _;
 
 use panic_halt as _; // Halt on panic
 
@@ -18,7 +20,6 @@ use stm32f4xx_hal::{
     i2c::Mode,
     pac::{self},
     prelude::*,
-    serial::config::Config,
 };
 
 use mpu6050::*;
@@ -51,21 +52,6 @@ fn main() -> ! {
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(48.MHz()).freeze();
 
-        // Set up the UART pin
-        let gpioa = dp.GPIOA.split();
-        let tx_pin = gpioa.pa2.into_alternate();
-        let mut tx = dp
-            .USART2
-            .tx(
-                tx_pin,
-                Config::default()
-                    .baudrate(115200.bps())
-                    .wordlength_8()
-                    .parity_none(),
-                &clocks,
-            )
-            .unwrap();
-
         // Set up the I2C pins
         let gpiob = dp.GPIOB.split();
         let scl = gpiob.pb8;
@@ -88,19 +74,19 @@ fn main() -> ! {
         loop {
             // get roll and pitch estimate
             let acc = mpu.get_acc_angles().unwrap();
-            writeln!(tx, "r/p: {:?}", acc).unwrap();
+            defmt::info!("{}", format!("r/p: {:?}", acc).as_str());
 
             // get temp
             let temp = mpu.get_temp().unwrap();
-            writeln!(tx, "temp: {:?}c", temp).unwrap();
+            defmt::info!("{}", format!("temp: {:?}°C", temp).as_str());
 
             // get gyro data, scaled with sensitivity
             let gyro = mpu.get_gyro().unwrap();
-            writeln!(tx, "gyro: {:?}", gyro).unwrap();
+            defmt::info!("{}", format!("gyro: {:?}", gyro).as_str());
 
             // get accelerometer data, scaled with sensitivity
             let acc = mpu.get_acc().unwrap();
-            writeln!(tx, "acc: {:?}", acc).unwrap();
+            defmt::info!("{}", format!("acc: {:?}", acc).as_str());
 
             delay.delay_ms(1000_u32);
         }
