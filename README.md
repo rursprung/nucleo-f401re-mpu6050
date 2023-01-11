@@ -6,7 +6,7 @@ This example showcases how the [mpu6050](https://crates.io/crates/mpu6050) crate
 The example logs messages using [`defmt`](https://defmt.ferrous-systems.com/).
 
 The example has been tested on a [ST Nucleo-F401RE](https://www.st.com/en/evaluation-tools/nucleo-f401re.html) development
-board but should work on any STM32F4xx family microcontroller as the IMU is connected via I2C1 on pins `PB8` (SCL) and `PB9` (SDA)
+board but should work on any STM32F4xx family microcontroller as long as the IMU is connected via I2C1 on pins `PB8` (SCL) and `PB9` (SDA)
 or the code is adapted accordingly.
 
 ## Prerequisites

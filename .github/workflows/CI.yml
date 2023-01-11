@@ -5,9 +5,6 @@ on:
     branches: [ "master" ]
   pull_request:
 
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,13 +18,13 @@ jobs:
       - name: Install flip-link
         run: cargo install flip-link
       - name: build
-        run: cargo build ${{ matrix.features }}
+        run: cargo build
       - name: check
-        run: cargo check ${{ matrix.features }}
+        run: cargo check
       # no tests available for now => no test step as it'd fail otherwise
       - name: check formatting
         run: cargo fmt --all -- --check
       - name: clippy
-        run: cargo clippy ${{ matrix.features }}
+        run: cargo clippy
       - name: audit
         run: cargo audit
