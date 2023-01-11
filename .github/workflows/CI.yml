@@ -10,22 +10,24 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install target
-        run: rustup target add thumbv7em-none-eabihf
+      - uses: actions/checkout@v3
+      - name: install rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv7em-none-eabihf
+          components: rustfmt clippy
       - name: Install flip-link
         run: cargo install flip-link
-      - uses: actions/checkout@v3
-      - name: Build
-        run: cargo build
+      - name: build
+        run: cargo build ${{ matrix.features }}
+      - name: check
+        run: cargo check ${{ matrix.features }}
       # no tests available for now => no test step as it'd fail otherwise
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
+      - name: check formatting
+        run: cargo fmt --all -- --check
+      - name: clippy
+        run: cargo clippy ${{ matrix.features }}
+      - name: audit
+        run: cargo audit
