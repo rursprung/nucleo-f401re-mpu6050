@@ -5,8 +5,6 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-embedded-hal = "0.2"
-nb = "1"
 cortex-m = { version = "0.7", features = ["critical-section-single-core"]}
 cortex-m-rt = "0.7"
 # Panic behaviour, see https://crates.io/keywords/panic-impl for alternatives
