@@ -9,11 +9,7 @@ use defmt_rtt as _;
 use panic_halt as _; // Halt on panic
 
 use cortex_m_rt::entry;
-use stm32f4xx_hal::{
-    i2c::Mode,
-    pac::{self},
-    prelude::*,
-};
+use stm32f4xx_hal::{i2c::Mode, pac, prelude::*};
 
 use mpu6050::*;
 
